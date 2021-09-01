@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.0.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <head>
+        <script type="text/javascript"
+            src="https://componentlibrary.blob.core.windows.net/library/uhrs-components-1.4-dev.min.js"></script>
+        <script type="text/javascript">
+
+            const setSummarizationProperties = function setIframeAndTagProperties(url) {
+                // Encode the query for URLs
+                const encodedQuery1 = encodeURIComponent(url);
+                // Check for market. If it's there, use it. Otherwise, use US
+
+                $("#url").attr("src", encodedQuery1);
+            };
+
+            //////////////////////////////////// Begin of system functions /////////////////////////////////////////////////
+            var judgementData = -1;
+
+            function xPlate_GoForward() {
+                var control = top.document.getElementById('silverlightControl');
+                control.Content.MainPage.GoForwardFromJavascript();
+            };
+            function xPlate_Skip() {
+                var control = top.document.getElementById('silverlightControl');
+                control.Content.MainPage.SkipFromJavascript();
+            };
+            function xPlate_GoBack() {
+                var control = top.document.getElementById('silverlightControl');
+                control.Content.MainPage.GoBackFromJavascript();
+            };
+            function xPlate_Validate() {
+
+                var appropriateChecked = document.getElementById("Appropriate").checked;
+                var notAppropriateChecked = document.getElementById("NotAppropriate").checked;
+                if (!appropriateChecked && !notAppropriateChecked) {
+                    alert("Please select one of the options to submit.");
+                    return false;
+                }
+                return true;
+            };
+            function xPlate_SubmitFeedback(appeal) {
+                if (appeal && document.getElementById('xPlate_audit_comment').value == "") {
+                    alert("Please provide your comment first.");
+                    return;
+                }
+                var control = top.document.getElementById('silverlightControl');
+                control.Content.MainPage.SubmitFeedbackFromJavascript(appeal);
+            };
+            function xPlate_SubmitAudit() {
+
+                if (document.getElementById('xPlate_audit_comment').value == "") {
+                    alert("Please provide your comment first.");
+                    return;
+                }
+                xPlate_GoForward();
+            };
+            function xPlate_SetJudgmentDataInt(i) {
+                var control = top.document.getElementById('silverlightControl');
+                control.Content.MainPage.SetJudgmentDataIntFromJavascript('', i);
+            };
+            // isFirstLoad = true for the initial loading of this Hit.
+            // isFirstLoad = false if the Hit is being redisplayed to the judge (such as when review page is used, or RTAs being shown).
+            function xPlate_OnLoad() {
+
+                startTime = new Date();
+                const url = top.xPlate.getHitData("Url");
+                setSummarizationProperties(url);
+                $('#url-tab').trigger('click');
+            };
+
+            function FieldPointsClicked(item) {
+                $(item).find('.hiders').toggle();
+            };
+            var startTime;
+            var minNumOfSecondsPerHit = 5;
+
+
+            function submitRating() {
+                var appropriateChecked = document.getElementById("Appropriate").checked;
+                var notAppropriateChecked = document.getElementById("NotAppropriate").checked;
+
+                if (!appropriateChecked && !notAppropriateChecked) {
+                    alert("Please select one of the options to submit.");
+                    return false;
+                }
+
+                if (new Date() - startTime < minNumOfSecondsPerHit * 1000) {
+                    document.getElementById("Appropriate").checked = false;
+                    document.getElementById("NotAppropriate").checked = false;
+                    alert("We would appreciate if you spend a few seconds reading the document and summary before making a choice.");
+                    startTime = new Date();
+                    return false;
+                }
+
+                var judgement = 0;
+
+                if (appropriateChecked) {
+                    judgement = 1;
+                }
+                else if (notAppropriateChecked) {
+                    judgement = 2;
+                }
+                xPlate_SetJudgmentDataInt(judgement);
+                xPlate_GoForward();
+            };
+
+        </script>
+
+        <style type="text/css" id="base_style">
+            .instructionTitle {
+                color: rgb(0, 5, 75);
+                font-weight: bold;
+            }
+
+            .equal {
+                display: -ms-flexbox;
+                display: -webkit-flex;
+                display: flex;
+            }
+
+
+
+            .map-container {
+                overflow: hidden;
+                padding-bottom: 56.25%;
+                position: relative;
+                height: 0;
+            }
+
+            .map-container iframe {
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+            }
+
+            .tab-pane:first-child .tab-pane-header {
+                border-top-left-radius: 0;
+            }
+
+            h4 {
+                color: green;
+            }
+
+            ul.noindent {
+                margin-left: 5px;
+                margin-right: 0px;
+                padding-left: 10px;
+                padding-right: 0px;
+            }
+
+            table.label {
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            table {
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 20px;
+                height: 100%;
+                table-layout: fixed;
+            }
+        </style>
+    </head>
+
+<body style="width:100%;">
+    <table style="height: 100%;">
+        <td class="documentView" style="min-width: 65vw;max-width: 65vw; padding-left: 1%; height: 100%;">
+            <div class="tab-content" id="myTabContent" style="height: 100%;" data-role="navbar">
+                <!-- Section for tabs-->
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
+                        <a class="nav-link" id="instructions-tab" data-toggle="tab" href="#instructions" role="tab"
+                            aria-controls="google" aria-selected="false">Instructions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="url-tab" data-toggle="tab" href="#url" role="tab" aria-controls="url"
+                            aria-selected="false">Source Page</a>
+                    </li>
+                </ul>
+                <div class="tab-pane fade fade" id="instructions" role="tabpanel" aria-labelledby="instructions-tab"
+                    style="height: 100%;">
+                    <div class="alert alert-primary guidelines">
+                        <h2>Task description</h2>
+                        Text summarization can sometimes save valuable time of a user. For example, if a user looks for
+                        an article about something, he/she may want to get a quick idea what the article is about before
+                        deciding whether or not to spend time reading the full article. A summary conveying the key
+                        points or the main theme of the article would be useful in such a setting. While a summary can
+                        help the user for some documents, it may be inappropriate for other ones. In this task, we will
+                        give you a document, and you will judge if a text summary is appropriate for the document.
+                        Please select the proper rating based on the guideline below. When in doubt, please use common
+                        sense:
+                        <br />
+                        <br />
+                        <h4 style="color: green;">Appropriate</h4>
+                        <p> If you think a good summary can help the user for the document, select “Appropriate”. In
+                            general, documents in this category are information rich, and as such, a summary can help
+                            the user to quickly get the key points without reading the full documents.
+                        </p>
+                        <p>
+                            In order to see examples, please expand 'Examples' below.
+                        </p>
+                        <fieldset class="majorpoints" onclick="FieldPointsClicked(this)"
+                            style="border: 1px; border-style: inset; border-color: orange;">
+                            <legend class="majorpointslegend" style="color: orange ;text-decoration: underline;">
+                                Examples</legend>
+                            <div class="hiders" style="display:none">
+                                <ol>
+                                    <li>
+                                        <p><a
+                                                href="https://www.stanforddaily.com/2012/02/23/chip-moves-wirelessly-in-bloodstream/">https://www.stanforddaily.com/2012/02/23/chip-moves-wirelessly-in-bloodstream/
+                                            </a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a
+                                                href="https://abcnews.go.com/US/building-partially-collapses-miami-beach/story?id=78459018">
+                                                https://abcnews.go.com/US/building-partially-collapses-miami-beach/story?id=78459018</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://www.healthline.com/nutrition/dragon-fruit-benefits">
+                                                https://www.healthline.com/nutrition/dragon-fruit-benefits</a>
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://en.wikipedia.org/wiki/Bill_Gates">
+                                                https://en.wikipedia.org/wiki/Bill_Gates</a>
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://www.mayoclinic.org/drugs-supplements-folate/art-20364625">
+                                                https://www.mayoclinic.org/drugs-supplements-folate/art-20364625</a>
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a
+                                                href="https://www.cnet.com/tech/computing/windows-11-release-date-sounds-like-itll-be-sooner-than-we-first-thought/">
+                                                https://www.cnet.com/tech/computing/windows-11-release-date-sounds-like-itll-be-sooner-than-we-first-thought/</a>
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a
+                                                href="https://www.ikea.com/us/en/p/kallax-shelf-unit-walnut-effect-light-gray-10360134/">
+                                                https://www.ikea.com/us/en/p/kallax-shelf-unit-walnut-effect-light-gray-10360134/</a>
+                                        </p>
+                                        <p>
+                                            Judgement : Appropriate
+                                        </p>
+                                    </li>
+                                </ol>
+                            </div>
+                        </fieldset>
+                        <br />
+                        <h4 style="color: red;">Not appropriate</h4>
+                        <p>
+                            For some documents, a summary is just not useful to the user. Examples are poems, lyrics,
+                            fictions, novels, online chats, forums, FAQ, tax forms, classified ads,
+                            religious scriptures, stock quotes, home & apartment listings, etc.
+                        </p>
+                        <p>
+                            Some documents are just not summarize-able. Examples are online video games, bank accounts,
+                            login pages, hotel reservation, flight schedules, TV channels, etc.
+                        </p>
+                        <p>
+                            If a document falls in one of the above categories, please select “Not appropriate”. If a
+                            document contains adult/sexual or other offensive content, or is too short, please also
+                            select “Not appropriate”.
+                        </p>
+                        <p>
+                            In order to see examples, please expand 'Examples' below.
+                        </p>
+                        <fieldset class="majorpoints" onclick="FieldPointsClicked(this)"
+                            style="border: 1px; border-style: inset; border-color: orange;">
+                            <legend class="majorpointslegend" style="color: orange ;text-decoration: underline;">
+                                Examples
+                            </legend>
+                            <div class="hiders" style="display:none">
+                                <ol>
+                                    <li>
+                                        <p><a href="https://www.bravoitalian.com/menu/happy-hour/">
+                                                https://www.bravoitalian.com/menu/happy-hour/</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://www.minecraft.net/en-us">
+                                                https://www.minecraft.net/en-us</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://ace.cbp.dhs.gov/ace1/wps/myportal">
+                                                https://ace.cbp.dhs.gov/ace1/wps/myportal</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not Appropriate (Login page)
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a
+                                                href="https://www.satelliteguys.us/xen/threads/thinking-of-switching-from-dish-to-comcast-xfinity.381361/">
+                                                https://www.satelliteguys.us/xen/threads/thinking-of-switching-from-dish-to-comcast-xfinity.381361/</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not Appropriate (Online chat)
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://en.wikipedia.org/wiki/Kudryashovo">
+                                                https://en.wikipedia.org/wiki/Kudryashovo</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not appropriate (Document too short)
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://www.mcdvoice.info/mcdonalds-survey/">
+                                                https://www.mcdvoice.info/mcdonalds-survey/</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not Appropriate
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p><a href="https://www.fanfiction.net/s/12369075/14/Harry-Potter-Alteran">
+                                                https://www.fanfiction.net/s/12369075/14/Harry-Potter-Alteran</a>
+
+                                        </p>
+                                        <p>
+                                            Judgement : Not appropriate (Novel/Fiction)
+                                        </p>
+                                    </li>
+                                </ol>
+                            </div>
+                        </fieldset>
+                        <br />
+                        <small class="small">In order to see the webpages, you need to use <a
+                                href="https://www.google.com/chrome/" target="_blank">Chrome browser</a>, and install <a
+                                href="https://chrome.google.com/webstore/detail/uhrs-extension/ipgondbceeejmemchckjbgmmjgaabfhd/related"
+                                target="_blank">W5P Chrome Extension</a>
+                        </small>
+                    </div>
+                </div> <!-- Information -->
+                <div class="tab-pane fade fade" id="url" role="tabpanel" aria-labelledby="url-tab" style="height: 100%">
+                    <div class="tab-pane-header" style="height: 100%">
+                        <div class="clearfix">
+                            If you see a blank screen please <a href="{Url}" target="_blank">open in a
+                                new tab</a>
+                        </div>
+                        <div class="urlTextDiv">
+                            URL: {Url}
+                        </div>
+                        <br />
+                        <div id="map-container" class="z-depth-1-half map-container" style="height: 100%">
+                            <iframe id="urlIFrame" src="{Url}" frameborder="0" style="border:0" width="65vw"
+                                allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+
+        <td class="summaryAndSubmitView" style="min-width: 25vw;max-width: 25vw; padding-left: 1%;">
+            <div style="height: 90%; padding-top: 5px ;">
+                <h4>Evaluation</h4>
+                <div style=" border-color: rgb(73, 73, 73); border-style: dotted; padding:2px; align-content: left;">
+                    <table height="100%" style="height:40px;">
+                        <tr>
+                            <td style="width: 250px">
+                                <div width="100%" align="left" valign="left"><label>
+                                        <div style="background-color:#ECF8E0;height:40px;"><input id="Appropriate"
+                                                name="Rating" type="radio" value="Appropriate" /><span class="step"
+                                                style="color:green;text-align:left ">Appropriate</span></div>
+                                    </label>
+                                </div>
+                                <div width="100%" align="left" valign="left"><label>
+                                        <div style="background-color:#FBF2EF;height:40px;"><input id="NotAppropriate"
+                                                name="Rating" type="radio" value="NotAppropriate" /><span class="step"
+                                                style="color:red;text-align:left">Not Appropriate</span></div>
+                                    </label></div>
+                                <button class="submitButton" onclick="submitRating();" type="button">Submit</button>
+
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <small class="small">In order to see the webpages, you need to use <a
+                        href="https://www.google.com/chrome/" target="_blank">Chrome browser</a>, and install <a
+                        href="https://chrome.google.com/webstore/detail/uhrs-extension/ipgondbceeejmemchckjbgmmjgaabfhd/related"
+                        target="_blank">W5P Chrome Extension</a>
+                </small>
+            </div>
+        </td>
+        </div> <!-- col-7 -->
+        </div>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
