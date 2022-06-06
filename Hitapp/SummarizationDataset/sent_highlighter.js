@@ -53,7 +53,7 @@ function setup_sent_highlighting_events() {
         }, false);
 
         el.addEventListener("mouseout", function( event ) {
-            for (const span of document.querySelectorAll(`span.hi[data-sent-uid="${curr_data_sent_uid}"]`)) {
+            for (const span of document.querySelectorAll(`span.${sent_span_cls_name}[data-sent-uid="${curr_data_sent_uid}"]`)) {
                 if (!span.dataset.hasOwnProperty('spanSelected'))
                     span.style.backgroundColor = null;
             }
