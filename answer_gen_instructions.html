@@ -1,0 +1,79 @@
+<html>
+	<head>
+	<style>
+	.example {
+	text-indent: 15px;
+	;
+	}
+	
+	li.selected span {
+	background-color: lightgreen;
+	width: auto;
+	}
+	</style>
+	
+	<script type="text/javascript">
+	function iframeLoaded() {
+	try {
+	var iframe = document.getElementById("faq_iframe");
+	if (iframe) {
+	iframe.height = "";
+	iframe.height == iframe.contentWindow.document.body.scrollHeight + "px";
+	}
+	
+	}
+	catch (error) {
+	console.log(error);
+	}
+	}
+	</script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	
+	
+	<body>
+	<!-- <section id="FAQ">
+	<iframe src="./FAQ.html" width="100%" id="faq_iframe" onload="iframeLoaded()"></iframe>
+	</section> -->
+	<div id="FAQ">
+	<h4 style="background-color: yellow; color: red;">New hitapp FAQ! Please check it out..</h4>
+	<h3> FAQ</h3>
+
+	<div style="text-indent: 10px;">
+	
+	<h3> What is this HIT about?</h3>
+	<p>We are trying to build a question-answering system which is able to retrieve the
+	answer by reasoning over multiple facts. This is the way we human typically
+	use to find an answer. For example, when this question is asked:</p>
+	<p><b>Has there always been a rivalry between Daffy Duck and Porky Pig?</b></p>
+	<p>We might find the answer by referring FACTS from Wikipedia for <a href="https://en.wikipedia.org/wiki/Daffy_Duck" target="_blank">Daffy Duck</p></a>
+	<ul>
+
+	<li>"Daffy first appeared in <a href="https://en.wikipedia.org/wiki/Porky%27s_Duck_Hunt" target="_blank">Porky's
+	Duck Hunt</a>, released on April 17, 1937."
+	</li>
+	<li>"Porky shoots the whiskey-filled barrel but Daffy escapes" or "Daffy
+	bites
+	Porky on the nose"</li>
+	<p>Using these 2 facts conclude the FINAL ANSWER as - <b>Yes, Daffy and Porky have been rivals since their first
+	appearance on screen.</b></p>
+	
+	<p>The answer is concluded by reasoning the facts from multiple resources. We believe that
+	this reasoning ability can greatly improve the question-answering ability of search
+	engines, so we create this Hitapp and asking help from you. Appreciate your participation! </p>
+	</ul>
+	
+
+	<h3>The New Format:</h3>
+	<p>Each hit starts with a question and group of text snippets provided by us that we think are sufficient to answer the question.
+	These should contain all the information necessary to answer the question..
+	You may use these provided facts *only* to formulate your answers to the question. </br>
+	Note: if you think information provided in facts is not enough to answer the question please MARK as cannot be answered.</p>
+		
+
+	<h4>Can the information from the URL link of text snippet be used in the answer? </h4>
+	<p>Information from the link provided can be used in the answer only if <b>the fact text snippet has that
+	information fully contained within it</b>. </p>
+	</body>
+	
+	</html>
